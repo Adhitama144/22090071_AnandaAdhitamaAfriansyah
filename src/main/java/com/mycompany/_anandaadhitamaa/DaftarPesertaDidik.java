@@ -3,15 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.mycompany._anandaadhitamaa;
-
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author LENOVO
  */
 public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
-
+    Connection conn;
+    Statement stmt;
+    ResultSet rs;
     /**
      * Creates new form TambahData
      */
@@ -20,6 +26,35 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
         this.setBorder(null);
         BasicInternalFrameUI decorate = (BasicInternalFrameUI) this.getUI();
         decorate.setNorthPane(null);
+        
+        try {
+            conn = LoginScereen.conn;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select id,nama,jenis_kelamin,tempat_lahir,tanggal_lahir,alamat,telephone,email,khursus from peserta_didik");
+            
+            DefaultTableModel model = new DefaultTableModel();
+            
+            model.addColumn("ID");
+            model.addColumn("Nama");
+            model.addColumn("Jenis Kelamin");
+            model.addColumn("Tempat Lahir");
+            model.addColumn("Tanggal Lahir");
+            model.addColumn("Alamat");
+            model.addColumn("Telephone");
+            model.addColumn("Email");
+            model.addColumn("Kursus");
+            
+            peserta_didik.setModel(model);
+            
+            while (rs.next()) {
+                Object[] rowData = new Object[rs.getMetaData().getColumnCount()];
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) { rowData[i - 1] = rs.getObject(i); }
+                model.addRow(rowData);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) { System.out.println(e.getMessage()); }
     }
 
     /**
@@ -33,7 +68,7 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
 
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        peserta_didik = new javax.swing.JTable();
 
         jButton1.setText("Tambah Data");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -42,21 +77,15 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        peserta_didik.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Id", "Nama", "Tanggal Lahir", "Jenis Kelamin", "Alamat", "Telephone", "Email", "Khursus"
+
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(7).setResizable(false);
-        }
+        jScrollPane1.setViewportView(peserta_didik);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,10 +94,10 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE))
+                        .addGap(0, 610, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -77,7 +106,8 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -95,6 +125,6 @@ public class DaftarPesertaDidik extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable peserta_didik;
     // End of variables declaration//GEN-END:variables
 }
