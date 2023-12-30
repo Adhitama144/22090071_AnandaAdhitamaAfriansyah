@@ -23,7 +23,7 @@ public class Dashboard extends javax.swing.JInternalFrame {
     ResultSet rs;
     
     /**
-     * Creates new form Dasboard
+     * Creates new form Dasboard    
      */
     public Dashboard() {
         initComponents();
